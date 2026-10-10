@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f8ff">
+    <meta name="description" content="Smart Expense Tracker Pro helps you manage expenses, track monthly budgets, and understand your spending.">
+    
+    <title>Smart Expense Tracker Pro</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-logo" aria-label="Smart Expense Tracker logo">
+                    ₹
+                </div>
+
+                <div>
+                    <div class="brand-name">
+                        Smart Expense <span>Tracker Pro</span>
+                    </div>
+                    <div class="brand-tagline">Plan · Track · Save</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="#dashboard" class="active">
+                    <span>⌂</span> Dashboard
+                </a>
+
+                <a href="#expenses-section">
+                    <span>↕</span> Expenses
+                </a>
+
+                <a href="#budget-section">
+                    <span>◷</span> Monthly Budget
+                </a>
+
+                <a href="#reports-section">
+                    <span>▥</span> Spending Reports
+                </a>
+            </nav>
+
+            <div class="sidebar-note">
+                <h3>💡 Small steps create big savings!</h3>
+                <p>
+                    Track your expenses, understand your spending,
+                    and work towards your financial goals.
+                </p>
+            </div>
+
+            <div class="sidebar-footer">
+                <strong>Smart Expense Tracker Pro</strong>
+                <p>Built with 💚 using Python, FastAPI, SQLite, HTML, CSS and JavaScript.</p>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="dashboard">
+
+            <!-- HEADER -->
+            <header class="page-header">
+                <div>
+                    <p class="eyebrow">YOUR PERSONAL FINANCE SPACE</p>
+                    <h1>Financial Dashboard</h1>
+                    <p>Track your money and make every rupee count.</p>
+                </div>
+
+                <div class="header-controls">
+                    <label for="selected-month" class="visually-hidden">
+                        Select dashboard month
+                    </label>
+                    <input
+                        type="month"
+                        id="selected-month"
+                        value="2026-10"
+                        aria-label="Select dashboard month"
+                    >
+                </div>
+            </header>
+
+            <!-- DASHBOARD COLUMNS -->
+            <div class="dashboard-grid">
+
+                <!-- LEFT COLUMN -->
+                <div class="main-column">
+
+                    <!-- OVERVIEW -->
+                    <section class="panel" aria-labelledby="overview-heading">
+
+                        <div class="panel-heading">
+                            <div>
+                                <h2 id="overview-heading">🌷 Overview</h2>
+                                <p>Here's how your finances are looking.</p>
+                            </div>
+
+                            <span class="live-label">● Live dashboard</span>
+                        </div>
+
+                        <div class="summary-grid">
+
+                            <article class="summary-card">
+                                <span class="summary-label">Total Spending</span>
+                                <strong class="summary-value" id="total-spending">₹0.00</strong>
+                                <span class="summary-description">All recorded expenses</span>
+                            </article>
+
+                            <article class="summary-card">
+                                <span class="summary-label">Monthly Spending</span>
+                                <strong class="summary-value" id="monthly-spending">₹0.00</strong>
+                                <span class="summary-description">Spending in selected month</span>
+                            </article>
+
+                            <article class="summary-card">
+                                <span class="summary-label">Monthly Budget</span>
+                                <strong class="summary-value" id="monthly-budget">₹0.00</strong>
+                                <span class="summary-description">Your planned monthly limit</span>
+                            </article>
+
+                            <article class="summary-card">
+                                <span class="summary-label">Budget Remaining</span>
+                                <strong class="summary-value" id="remaining-budget">₹0.00</strong>
+                                <span class="summary-description">Available for this month</span>
+                            </article>
+
+                        </div>
+
+                    </section>
+
+                    <!-- BUDGET PROGRESS -->
+                    <section class="budget-progress" aria-labelledby="progress-heading">
+
+                        <div class="progress-top">
+                            <div>
+                                <h2 id="progress-heading">🌱 Monthly Budget Progress</h2>
+                                <p>Keep your spending within your limit.</p>
+                            </div>
+
+                            <strong id="budget-percentage">0%</strong>
+                        </div>
+
+                        <div
+                            class="progress-track"
+                            id="budget-progress-track"
+                            role="progressbar"
+                            aria-label="Monthly budget used"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="0"
+                        >
+                            <div
+                                class="progress-fill"
+                                id="budget-progress-fill"
+                                style="width: 0%;"
+                            ></div>
+                        </div>
+
+                        <p class="progress-caption" id="budget-status">
+                            Set a monthly budget to start tracking your progress.
+                        </p>
+
+                    </section>
+
+                    <!-- EXPENSE MANAGEMENT -->
+                    <section class="panel" id="expenses-section" aria-labelledby="expenses-heading">
+
+                        <div class="panel-heading">
+                            <div>
+                                <h2 id="expenses-heading">💸 Expense Management</h2>
+                                <p>Add, search, filter, and manage your expenses.</p>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn-primary"
+                                id="show-expense-form"
+                            >
+                                + Add Expense
+                            </button>
+                        </div>
+
+                        <!-- ADD EXPENSE FORM -->
+                        <form id="expense-form" style="display: none;">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label for="expense-title">Expense name *</label>
+                                    <input
+                                        type="text"
+                                        id="expense-title"
+                                        name="title"
+                                        placeholder="e.g. Lunch, Bus Fare"
+                                        maxlength="100"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="expense-amount">Amount (₹) *</label>
+                                    <input
+                                        type="number"
+                                        id="expense-amount"
+                                        name="amount"
+                                        placeholder="e.g. 250"
+                                        min="0.01"
+                                        max="100000000"
+                                        step="0.01"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="expense-category">Category *</label>
+                                    <select id="expense-category" name="category" required>
+                                        <option value="Food">🍜 Food</option>
+                                        <option value="Transport">🚌 Transport</option>
+                                        <option value="Shopping">🛍️ Shopping</option>
+                                        <option value="Bills">💡 Bills</option>
+                                        <option value="Education">📚 Education</option>
+                                        <option value="Health">💚 Health</option>
+                                        <option value="Entertainment">🎬 Entertainment</option>
+                                        <option value="Other">✨ Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="expense-date">Expense date *</label>
+                                    <input
+                                        type="date"
+                                        id="expense-date"
+                                        name="expense_date"
+                                        required
+                                    >
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="expense-notes">Notes (optional)</label>
+                                <textarea
+                                    id="expense-notes"
+                                    name="notes"
+                                    placeholder="Add any additional details..."
+                                    maxlength="500"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+
+                            <p
+                                class="form-message"
+                                id="expense-message"
+                                role="status"
+                                aria-live="polite"
+                            ></p>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    Save Expense
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn-secondary"
+                                    id="cancel-expense-form"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <!-- SEARCH AND FILTER -->
+                        <div class="expense-toolbar">
+
+                            <div class="form-group">
+                                <label for="expense-search">Search expenses</label>
+                                <input
+                                    type="search"
+                                    id="expense-search"
+                                    placeholder="Search name, category, or notes..."
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category-filter">Filter category</label>
+                                <select id="category-filter">
+                                    <option value="all">All Categories</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Bills">Bills</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Health">Health</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group export-control">
+                                <label>Download data</label>
+                                <button
+                                    type="button"
+                                    class="btn-export"
+                                    id="export-csv-button"
+                                >
+                                    ↓ Export CSV
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <!-- EXPENSE LIST -->
+                        <div class="section-heading">
+                            <div>
+                                <h2>Recent Expenses</h2>
+                                <p>
+                                    <span id="expense-count">0</span> expense(s)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Expense</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="expense-list">
+                                    <tr>
+                                        <td colspan="5" class="empty-state">
+                                            Loading your expenses...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <aside class="right-column">
+
+                    <!-- MONTHLY BUDGET -->
+                    <section class="budget-card" id="budget-section" aria-labelledby="budget-heading">
+
+                        <div class="card-heading">
+                            <div>
+                                <h2 id="budget-heading">🗓️ Monthly Budget Planner</h2>
+                                <p>Set a spending limit for each month.</p>
+                            </div>
+                        </div>
+
+                        <form id="budget-form">
+
+                            <div class="form-group">
+                                <label for="budget-month">Budget month</label>
+                                <input
+                                    type="month"
+                                    id="budget-month"
+                                    name="month"
+                                    value="2026-10"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="budget-amount">Monthly budget (₹)</label>
+                                <input
+                                    type="number"
+                                    id="budget-amount"
+                                    name="amount"
+                                    placeholder="e.g. 5000"
+                                    min="0"
+                                    max="100000000"
+                                    step="0.01"
+                                    required
+                                >
+                            </div>
+
+                            <p
+                                class="form-message"
+                                id="budget-message"
+                                role="status"
+                                aria-live="polite"
+                            ></p>
+
+                            <button type="submit" class="btn-primary">
+                                Save Monthly Budget
+                            </button>
+
+                        </form>
+
+                    </section>
+
+                    <!-- SPENDING REPORTS -->
+                    <section class="report-card" id="reports-section" aria-labelledby="reports-heading">
+
+                        <div class="card-heading">
+                            <div>
+                                <h2 id="reports-heading">📊 Spending Reports</h2>
+                                <p>Category breakdown for the selected month.</p>
+                            </div>
+                        </div>
+
+                        <div id="category-breakdown" class="category-breakdown">
+                            <p class="empty-state">
+                                Your spending breakdown will appear here.
+                            </p>
+                        </div>
+
+                    </section>
+
+                    <!-- SAVINGS TIP -->
+                    <section class="report-card">
+                        <div class="card-heading">
+                            <div>
+                                <h2>✨ Smart Savings Tip</h2>
+                                <p>Small habits make a difference.</p>
+                            </div>
+                        </div>
+
+                        <p style="color: #7883a5; line-height: 1.8;">
+                            Review your spending regularly, set a realistic
+                            monthly budget, and save a little whenever you can.
+                        </p>
+                    </section>
+
+                </aside>
+
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="app-footer">
+                <p>
+                    Smart Expense Tracker Pro · Built with Python, FastAPI,
+                    SQLite, HTML, CSS and JavaScript.
+                </p>
+                <p>Plan wisely. Spend mindfully. Save happily. 💜</p>
+            </footer>
+
+        </main>
+
+    </div>
+
+    <script src="/static/script.js" defer></script>
+
+</body>
+</html>
